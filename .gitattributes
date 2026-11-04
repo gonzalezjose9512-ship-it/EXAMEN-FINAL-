@@ -1,0 +1,9 @@
+# Todos los archivos de texto se guardan con fin de línea LF (estilo Linux).
+# Evita los avisos "LF will be replaced by CRLF" y que fallen los scripts dentro de Docker.
+* text=auto eol=lf
+
+# Archivos binarios: no tocar
+*.png binary
+*.jpg binary
+*.gif binary
+*.pdf binary
