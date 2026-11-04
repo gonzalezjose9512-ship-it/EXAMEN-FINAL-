@@ -18,4 +18,12 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Pedidos.Domain\Pedidos.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Pedidos.Application\Pedidos.Application.csproj" />
+    <ProjectReference Include="..\..\src\Inventario.Service\Inventario.Service.csproj" />
+    <ProjectReference Include="..\..\src\Pagos.Service\Pagos.Service.csproj" />
+    <ProjectReference Include="..\..\src\Logistica.Service\Logistica.Service.csproj" />
+  </ItemGroup>
+
 </Project>
