@@ -1,22 +1,38 @@
+using Pedidos.Api.Errores;
+using Pedidos.Application.CasosDeUso;
+using Pedidos.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// ----- Adaptador de entrada HTTP: controllers + Swagger -----
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// ----- Errores en formato ProblemDetails (404, 409, 422) -----
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ManejadorDeErrores>();
+
+// ----- Casos de uso (Application) -----
+builder.Services.AddScoped<CrearPedido>();
+builder.Services.AddScoped<AgregarItem>();
+builder.Services.AddScoped<ObtenerPedido>();
+builder.Services.AddScoped<ObtenerEventos>();
+builder.Services.AddScoped<ObtenerSaga>();
+
+// ----- Adaptadores de salida (Infrastructure): PostgreSQL -----
+builder.Services.AddInfraestructura(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseExceptionHandler();
+
+// Swagger habilitado en desarrollo (lo pide el enunciado)
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

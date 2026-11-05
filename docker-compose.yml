@@ -15,7 +15,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres_dev
     ports:
-      - "5432:5432"
+      # 5433 en tu PC → 5432 dentro del contenedor.
+      # Se usa 5433 para no chocar con un PostgreSQL instalado localmente en el 5432.
+      - "5433:5432"
     volumes:
       # Datos persistentes: sobreviven a "docker compose down" (se borran con "down -v")
       - pgdata:/var/lib/postgresql/data
