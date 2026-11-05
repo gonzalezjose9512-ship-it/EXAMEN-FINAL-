@@ -1,6 +1,53 @@
-@Pedidos.Api_HostAddress = http://localhost:5070
+# =============================================================================
+# Requests de la API de Pedidos (se ejecutan con "Send Request" en VS Code
+# con la extensión REST Client, o directamente en Visual Studio).
+# Antes: docker compose up -d   y   dotnet run --project src/Pedidos.Api
+# =============================================================================
+@host = http://localhost:5070
+# Id del pedido creado en el request 1 (ejecutá primero el request 1)
+@pedidoId = {{crear.response.body.$.pedidoId}}
 
-GET {{Pedidos.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Crear pedido → 201 Created
+# @name crear
+POST {{host}}/api/pedidos
+Content-Type: application/json
 
-###
+{
+  "clienteId": "CLI-001",
+  "direccionEnvio": {
+    "calle": "Av. Mate de Luna",
+    "numero": "1234",
+    "ciudad": "San Miguel de Tucumán",
+    "codigoPostal": "4000"
+  }
+}
+
+### 2. Agregar ítem → 200 OK
+POST {{host}}/api/pedidos/{{pedidoId}}/items
+Content-Type: application/json
+
+{ "productoId": "P001", "cantidad": 2, "precioUnitario": 45000 }
+
+### 2b. Agregar ítem con cantidad inválida → 400 Bad Request
+POST {{host}}/api/pedidos/{{pedidoId}}/items
+Content-Type: application/json
+
+{ "productoId": "P001", "cantidad": 11, "precioUnitario": 45000 }
+
+### 2c. Superar 10 unidades del mismo producto → 422 Unprocessable Entity
+POST {{host}}/api/pedidos/{{pedidoId}}/items
+Content-Type: application/json
+
+{ "productoId": "P001", "cantidad": 9, "precioUnitario": 45000 }
+
+### 4. Consultar pedido (reconstruido desde sus eventos) → 200 OK
+GET {{host}}/api/pedidos/{{pedidoId}}
+
+### 5. Consultar eventos del pedido → 200 OK
+GET {{host}}/api/pedidos/{{pedidoId}}/eventos
+
+### 4b. Pedido inexistente → 404 Not Found
+GET {{host}}/api/pedidos/00000000-0000-0000-0000-000000000000
+
+### 6. Consultar saga inexistente → 404 Not Found
+GET {{host}}/api/sagas/00000000-0000-0000-0000-000000000000
