@@ -1,0 +1,33 @@
+# =============================================================================
+# TiendaNorte - entorno completo con un solo comando:
+#     docker compose up -d
+#
+# Por ahora levanta PostgreSQL 16 (Hito 4). En las próximas etapas se suman
+# rabbitmq, pedidos-api, inventario, pagos y logistica.
+# =============================================================================
+name: tiendanorte
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: tiendanorte
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      # Datos persistentes: sobreviven a "docker compose down" (se borran con "down -v")
+      - pgdata:/var/lib/postgresql/data
+      # Scripts que crean esquemas, roles, tablas y datos iniciales.
+      # PostgreSQL los ejecuta en orden alfabético SOLO la primera vez (volumen vacío).
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # Los demás servicios esperan a que la base acepte conexiones
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tiendanorte"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
