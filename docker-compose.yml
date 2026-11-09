@@ -2,8 +2,8 @@
 # TiendaNorte - entorno completo con un solo comando:
 #     docker compose up -d
 #
-# Por ahora levanta PostgreSQL 16 (Hito 4). En las próximas etapas se suman
-# rabbitmq, pedidos-api, inventario, pagos y logistica.
+# Por ahora levanta PostgreSQL 16 (Hito 4) y RabbitMQ 3.13 (Hito 6).
+# En las próximas etapas se suman pedidos-api, inventario, pagos y logistica.
 # =============================================================================
 name: tiendanorte
 
@@ -31,5 +31,27 @@ services:
       timeout: 5s
       retries: 10
 
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    # Nombre fijo: RabbitMQ guarda sus datos según el nombre del nodo (rabbit@rabbitmq).
+    # Sin esto, al recrear el contenedor se perderían las colas durables.
+    hostname: rabbitmq
+    environment:
+      # El usuario "guest" solo puede conectarse desde el mismo contenedor,
+      # por eso se crea un usuario propio para los servicios.
+      RABBITMQ_DEFAULT_USER: tiendanorte
+      RABBITMQ_DEFAULT_PASS: tiendanorte_dev
+    ports:
+      - "5672:5672"     # AMQP: lo usan la API y los servicios
+      - "15672:15672"   # Panel de administración: http://localhost:15672
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
 volumes:
   pgdata:
+  rabbitmqdata:
