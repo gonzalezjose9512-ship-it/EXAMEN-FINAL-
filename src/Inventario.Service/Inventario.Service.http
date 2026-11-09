@@ -1,0 +1,14 @@
+# Consultas de Inventario (solo lectura)
+@inventario = http://localhost:5172
+
+### Productos y stock
+GET {{inventario}}/api/productos
+
+### Un producto
+GET {{inventario}}/api/productos/P001
+
+### Producto inexistente → 404
+GET {{inventario}}/api/productos/P999
+
+### Una reserva (reemplazá el id por el que devuelve la saga)
+GET {{inventario}}/api/reservas/R-000001
