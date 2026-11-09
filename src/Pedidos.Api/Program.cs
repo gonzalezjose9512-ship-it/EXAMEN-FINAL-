@@ -19,8 +19,12 @@ builder.Services.AddScoped<AgregarItem>();
 builder.Services.AddScoped<ObtenerPedido>();
 builder.Services.AddScoped<ObtenerEventos>();
 builder.Services.AddScoped<ObtenerSaga>();
+builder.Services.AddScoped<ConfirmarPedido>();
 
-// ----- Adaptadores de salida (Infrastructure): PostgreSQL -----
+// Reloj del sistema: las reglas que dependen de la fecha lo reciben por constructor
+builder.Services.AddSingleton(TimeProvider.System);
+
+// ----- Adaptadores de salida (Infrastructure): PostgreSQL y RabbitMQ -----
 builder.Services.AddInfraestructura(builder.Configuration);
 
 var app = builder.Build();
