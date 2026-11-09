@@ -1,0 +1,11 @@
+# Consultas de Logística (solo lectura)
+@logistica = http://localhost:5250
+
+### Envíos de una fecha: cupo diario, programados y lista
+GET {{logistica}}/api/envios?fecha=2026-11-23
+
+### Fecha con formato inválido → 400
+GET {{logistica}}/api/envios?fecha=23-11-2026
+
+### Un envío (reemplazá el id por el que aparece en la saga)
+GET {{logistica}}/api/envios/E-000001

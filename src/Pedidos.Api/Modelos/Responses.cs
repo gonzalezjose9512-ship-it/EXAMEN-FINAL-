@@ -6,6 +6,9 @@ namespace Pedidos.Api.Modelos;
 /// <summary>Respuesta 201 de POST /api/pedidos.</summary>
 public sealed record CrearPedidoResponse(Guid PedidoId, string Estado, int Version);
 
+/// <summary>Respuesta 202 de POST /api/pedidos/{pedidoId}/confirmar.</summary>
+public sealed record ConfirmarPedidoResponse(Guid PedidoId, Guid SagaId, string Estado);
+
 /// <summary>Estado del pedido (endpoints 2 y 4).</summary>
 public sealed record PedidoResponse(
     Guid PedidoId,

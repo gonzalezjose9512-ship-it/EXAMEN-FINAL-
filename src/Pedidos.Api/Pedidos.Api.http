@@ -40,6 +40,27 @@ Content-Type: application/json
 
 { "productoId": "P001", "cantidad": 9, "precioUnitario": 45000 }
 
+### 3. Confirmar pedido → 202 Accepted (inicia la saga)
+# @name confirmar
+POST {{host}}/api/pedidos/{{pedidoId}}/confirmar
+Content-Type: application/json
+
+{
+  "tarjeta": { "numero": "4111111111111111", "titular": "Juan Perez", "vencimiento": "12/28" },
+  "fechaEnvioPreferida": "2026-11-23"
+}
+
+### 3b. Confirmar de nuevo el mismo pedido → 409 Conflict
+POST {{host}}/api/pedidos/{{pedidoId}}/confirmar
+Content-Type: application/json
+
+{
+  "tarjeta": { "numero": "4111111111111111", "titular": "Juan Perez", "vencimiento": "12/28" }
+}
+
+### 6. Consultar la saga del pedido confirmado → 200 OK
+GET {{host}}/api/sagas/{{confirmar.response.body.$.sagaId}}
+
 ### 4. Consultar pedido (reconstruido desde sus eventos) → 200 OK
 GET {{host}}/api/pedidos/{{pedidoId}}
 

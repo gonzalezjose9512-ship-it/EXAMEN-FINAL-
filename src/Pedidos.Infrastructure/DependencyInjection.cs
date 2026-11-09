@@ -2,12 +2,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Pedidos.Application.Puertos;
+using Pedidos.Infrastructure.Mensajeria;
 using Pedidos.Infrastructure.Persistencia;
 
 namespace Pedidos.Infrastructure;
 
 /// <summary>
-/// Registra los adaptadores de salida: conecta cada puerto de Application con su implementación.
+/// Registra los adaptadores de salida (PostgreSQL y RabbitMQ): conecta cada puerto de Application con su implementación.
 /// Es el único lugar donde se decide "IEventStore = PostgresEventStore".
 /// </summary>
 public static class DependencyInjection
@@ -27,6 +28,11 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<PostgresUnitOfWork>());
         services.AddScoped<IEventStore, PostgresEventStore>();
         services.AddScoped<ISagaRepository, PostgresSagaRepository>();
+
+        // RabbitMQ: una conexión por proceso y un publicador compartido
+        services.Configure<OpcionesRabbitMq>(configuration.GetSection("RabbitMQ"));
+        services.AddSingleton<ConexionRabbitMq>();
+        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
 
         return services;
     }
