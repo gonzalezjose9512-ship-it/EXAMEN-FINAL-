@@ -1,0 +1,8 @@
+# Consultas de Pagos (solo lectura)
+@pagos = http://localhost:5149
+
+### Un pago (reemplazá el id por el que aparece en la saga)
+GET {{pagos}}/api/pagos/PG-000001
+
+### Intentos de pago de un pedido (reemplazá el pedidoId)
+GET {{pagos}}/api/pagos?pedidoId=00000000-0000-0000-0000-000000000000
