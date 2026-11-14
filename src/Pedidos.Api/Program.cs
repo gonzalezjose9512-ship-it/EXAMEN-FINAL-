@@ -1,5 +1,7 @@
 using Pedidos.Api.Errores;
 using Pedidos.Application.CasosDeUso;
+using Pedidos.Application.Sagas;
+using Pedidos.Infrastructure.Mensajeria;
 using Pedidos.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,10 @@ builder.Services.AddScoped<ObtenerPedido>();
 builder.Services.AddScoped<ObtenerEventos>();
 builder.Services.AddScoped<ObtenerSaga>();
 builder.Services.AddScoped<ConfirmarPedido>();
+
+// ----- Saga de confirmación y su adaptador de entrada (cola pedidos.respuestas) -----
+builder.Services.AddScoped<ConfirmacionPedidoSaga>();
+builder.Services.AddHostedService<RespuestasConsumer>();
 
 // Reloj del sistema: las reglas que dependen de la fecha lo reciben por constructor
 builder.Services.AddSingleton(TimeProvider.System);
