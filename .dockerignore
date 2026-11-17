@@ -1,0 +1,16 @@
+# Lo que NO se copia a las imágenes de Docker
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+.git/
+.gitignore
+.gitattributes
+tests/
+database/
+docs/
+**/*.http
+README.md
+docker-compose.yml
+**/Dockerfile

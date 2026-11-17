@@ -1,11 +1,39 @@
 # =============================================================================
-# TiendaNorte - entorno completo con un solo comando:
-#     docker compose up -d
+# TiendaNorte - sistema completo con UN SOLO COMANDO:
+#     docker compose up -d --build
 #
-# Por ahora levanta PostgreSQL 16 (Hito 4) y RabbitMQ 3.13 (Hito 6).
-# En las próximas etapas se suman pedidos-api, inventario, pagos y logistica.
+# Servicios (nombres exigidos por el enunciado):
+#   postgres     PostgreSQL 16, un esquema por servicio     → localhost:5433
+#   rabbitmq     RabbitMQ 3.13 + panel de administración    → localhost:5672 / http://localhost:15672
+#   pedidos-api  API REST de Pedidos (Swagger)              → http://localhost:5070/swagger
+#   inventario   Servicio de Inventario (GET de consulta)   → http://localhost:5172/api/productos
+#   pagos        Pasarela de pagos simulada                 → http://localhost:5149/api/pagos?pedidoId=...
+#   logistica    Programación de envíos                     → http://localhost:5250/api/envios?fecha=AAAA-MM-DD
+#
+# Dentro de la red de Docker los servicios se encuentran por nombre (Host=postgres,
+# Host=rabbitmq). Las cadenas de conexión llegan por variables de entorno: pisan las de
+# appsettings.json y nunca están escritas en el código.
+# "Gss Encryption Mode=Disable" evita que Npgsql intente autenticación Kerberos, que la
+# imagen de ASP.NET no trae (solo producía un aviso en el log: libgssapi_krb5.so.2).
 # =============================================================================
 name: tiendanorte
+
+# Valores comunes de los 4 componentes .NET
+x-dotnet: &dotnet
+  restart: unless-stopped
+  depends_on:
+    postgres:
+      condition: service_healthy
+    rabbitmq:
+      condition: service_healthy
+
+x-entorno-comun: &entorno-comun
+  RabbitMQ__Host: rabbitmq
+  RabbitMQ__Port: "5672"
+  RabbitMQ__Usuario: tiendanorte
+  RabbitMQ__Clave: tiendanorte_dev
+  # Hora de Argentina: "hoy" para la fecha de envío y el vencimiento de tarjetas
+  TZ: America/Argentina/Buenos_Aires
 
 services:
   postgres:
@@ -51,6 +79,55 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
+
+  pedidos-api:
+    <<: *dotnet
+    build:
+      context: .
+      dockerfile: src/Pedidos.Api/Dockerfile
+    environment:
+      <<: *entorno-comun
+      # Development: Swagger habilitado (lo pide el enunciado)
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=tiendanorte;Username=pedidos_app;Password=pedidos_dev;Gss Encryption Mode=Disable
+    ports:
+      - "5070:8080"
+
+  inventario:
+    <<: *dotnet
+    build:
+      context: .
+      dockerfile: src/Inventario.Service/Dockerfile
+    environment:
+      <<: *entorno-comun
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=tiendanorte;Username=inventario_app;Password=inventario_dev;Gss Encryption Mode=Disable
+    ports:
+      - "5172:8080"
+
+  pagos:
+    <<: *dotnet
+    build:
+      context: .
+      dockerfile: src/Pagos.Service/Dockerfile
+    environment:
+      <<: *entorno-comun
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=tiendanorte;Username=pagos_app;Password=pagos_dev;Gss Encryption Mode=Disable
+    ports:
+      - "5149:8080"
+
+  logistica:
+    <<: *dotnet
+    build:
+      context: .
+      dockerfile: src/Logistica.Service/Dockerfile
+    environment:
+      <<: *entorno-comun
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=tiendanorte;Username=logistica_app;Password=logistica_dev;Gss Encryption Mode=Disable
+      # Cupo diario: 3 por defecto (appsettings.json). Para el escenario E4 se puede levantar con
+      #   PowerShell:  $env:CUPO_DIARIO = "0"; docker compose up -d logistica
+      CupoDiario: ${CUPO_DIARIO:-3}
+    ports:
+      - "5250:8080"
 
 volumes:
   pgdata:
