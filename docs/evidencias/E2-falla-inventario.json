@@ -1,0 +1,123 @@
+{
+    "escenario":  "E2 - Falla Inventario (sin stock)",
+    "requests":  {
+                     "item":  {
+                                  "productoId":  "P005",
+                                  "cantidad":  3,
+                                  "precioUnitario":  950000
+                              },
+                     "tarjeta":  {
+                                     "numero":  "4111111111111111",
+                                     "titular":  "Juan Perez",
+                                     "vencimiento":  "12/28"
+                                 }
+                 },
+    "pedidoId":  "e046eb1e-0e9c-4efb-a0c6-24608d62093a",
+    "sagaId":  "9d6cddca-b234-4e58-aa2f-0a1106ca795c",
+    "pedido":  {
+                   "pedidoId":  "e046eb1e-0e9c-4efb-a0c6-24608d62093a",
+                   "clienteId":  "CLI-001",
+                   "estado":  "Rechazado",
+                   "direccionEnvio":  {
+                                          "calle":  "Av. Mate de Luna",
+                                          "numero":  "1234",
+                                          "ciudad":  "San Miguel de Tucumán",
+                                          "codigoPostal":  "4000"
+                                      },
+                   "items":  [
+                                 {
+                                     "productoId":  "P005",
+                                     "cantidad":  3,
+                                     "precioUnitario":  950000,
+                                     "subtotal":  2850000
+                                 }
+                             ],
+                   "subtotal":  2850000,
+                   "descuento":  285000.00,
+                   "total":  2565000.00,
+                   "version":  4,
+                   "confirmacion":  null,
+                   "motivoRechazo":  "STOCK_INSUFICIENTE"
+               },
+    "eventos":  [
+                    {
+                        "version":  1,
+                        "tipo":  "PedidoCreado",
+                        "fechaUtc":  "2026-11-18T13:48:42.626449Z",
+                        "datos":  {
+                                      "clienteId":  "CLI-001",
+                                      "direccionEnvio":  {
+                                                             "calle":  "Av. Mate de Luna",
+                                                             "ciudad":  "San Miguel de Tucumán",
+                                                             "numero":  "1234",
+                                                             "codigoPostal":  "4000"
+                                                         }
+                                  }
+                    },
+                    {
+                        "version":  2,
+                        "tipo":  "ItemAgregado",
+                        "fechaUtc":  "2026-11-18T13:48:42.68731Z",
+                        "datos":  {
+                                      "cantidad":  3,
+                                      "productoId":  "P005",
+                                      "precioUnitario":  950000
+                                  }
+                    },
+                    {
+                        "version":  3,
+                        "tipo":  "ConfirmacionSolicitada",
+                        "fechaUtc":  "2026-11-18T13:48:42.742475Z",
+                        "datos":  {
+                                      "sagaId":  "9d6cddca-b234-4e58-aa2f-0a1106ca795c"
+                                  }
+                    },
+                    {
+                        "version":  4,
+                        "tipo":  "PedidoRechazado",
+                        "fechaUtc":  "2026-11-18T13:48:42.794706Z",
+                        "datos":  {
+                                      "motivo":  "STOCK_INSUFICIENTE"
+                                  }
+                    }
+                ],
+    "saga":  {
+                 "sagaId":  "9d6cddca-b234-4e58-aa2f-0a1106ca795c",
+                 "pedidoId":  "e046eb1e-0e9c-4efb-a0c6-24608d62093a",
+                 "estado":  "Fallida",
+                 "pasos":  [
+                               {
+                                   "nombre":  "ReservarStock",
+                                   "estado":  "Fallido",
+                                   "fechaUtc":  "2026-11-18T13:48:42.790908Z",
+                                   "motivo":  "STOCK_INSUFICIENTE"
+                               }
+                           ],
+                 "error":  "STOCK_INSUFICIENTE"
+             },
+    "verificacion":  {
+                         "stockP005Antes":  2,
+                         "stockP005Despues":  2,
+                         "pagosDelPedido":  [
+
+                                            ]
+                     },
+    "colas":  {
+                  "inventario.comandos":  {
+                                              "ready":  0,
+                                              "unacked":  0
+                                          },
+                  "logistica.comandos":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         },
+                  "pagos.comandos":  {
+                                         "ready":  0,
+                                         "unacked":  0
+                                     },
+                  "pedidos.respuestas":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         }
+              }
+}
