@@ -1,0 +1,149 @@
+{
+    "escenario":  "E3 - Falla Pagos (tarjeta rechazada)",
+    "requests":  {
+                     "item":  {
+                                  "productoId":  "P001",
+                                  "cantidad":  2,
+                                  "precioUnitario":  45000
+                              },
+                     "tarjeta":  {
+                                     "numero":  "4111111111110000",
+                                     "titular":  "Juan Perez",
+                                     "vencimiento":  "12/28"
+                                 }
+                 },
+    "pedidoId":  "9aa449f5-fc1c-49bb-a0b7-7be0c4f1415d",
+    "sagaId":  "9e5fe78b-2522-4844-a2ce-e11902110a53",
+    "pedido":  {
+                   "pedidoId":  "9aa449f5-fc1c-49bb-a0b7-7be0c4f1415d",
+                   "clienteId":  "CLI-001",
+                   "estado":  "Rechazado",
+                   "direccionEnvio":  {
+                                          "calle":  "Av. Mate de Luna",
+                                          "numero":  "1234",
+                                          "ciudad":  "San Miguel de Tucumán",
+                                          "codigoPostal":  "4000"
+                                      },
+                   "items":  [
+                                 {
+                                     "productoId":  "P001",
+                                     "cantidad":  2,
+                                     "precioUnitario":  45000,
+                                     "subtotal":  90000
+                                 }
+                             ],
+                   "subtotal":  90000,
+                   "descuento":  0,
+                   "total":  90000,
+                   "version":  4,
+                   "confirmacion":  null,
+                   "motivoRechazo":  "TARJETA_RECHAZADA"
+               },
+    "eventos":  [
+                    {
+                        "version":  1,
+                        "tipo":  "PedidoCreado",
+                        "fechaUtc":  "2026-11-18T13:48:43.360145Z",
+                        "datos":  {
+                                      "clienteId":  "CLI-001",
+                                      "direccionEnvio":  {
+                                                             "calle":  "Av. Mate de Luna",
+                                                             "ciudad":  "San Miguel de Tucumán",
+                                                             "numero":  "1234",
+                                                             "codigoPostal":  "4000"
+                                                         }
+                                  }
+                    },
+                    {
+                        "version":  2,
+                        "tipo":  "ItemAgregado",
+                        "fechaUtc":  "2026-11-18T13:48:43.41721Z",
+                        "datos":  {
+                                      "cantidad":  2,
+                                      "productoId":  "P001",
+                                      "precioUnitario":  45000
+                                  }
+                    },
+                    {
+                        "version":  3,
+                        "tipo":  "ConfirmacionSolicitada",
+                        "fechaUtc":  "2026-11-18T13:48:43.469137Z",
+                        "datos":  {
+                                      "sagaId":  "9e5fe78b-2522-4844-a2ce-e11902110a53"
+                                  }
+                    },
+                    {
+                        "version":  4,
+                        "tipo":  "PedidoRechazado",
+                        "fechaUtc":  "2026-11-18T13:48:43.5479Z",
+                        "datos":  {
+                                      "motivo":  "TARJETA_RECHAZADA"
+                                  }
+                    }
+                ],
+    "saga":  {
+                 "sagaId":  "9e5fe78b-2522-4844-a2ce-e11902110a53",
+                 "pedidoId":  "9aa449f5-fc1c-49bb-a0b7-7be0c4f1415d",
+                 "estado":  "Compensada",
+                 "pasos":  [
+                               {
+                                   "nombre":  "ReservarStock",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:43.4949Z",
+                                   "resultado":  {
+                                                     "reservaId":  "R-000002"
+                                                 }
+                               },
+                               {
+                                   "nombre":  "Cobrar",
+                                   "estado":  "Fallido",
+                                   "fechaUtc":  "2026-11-18T13:48:43.520169Z",
+                                   "motivo":  "TARJETA_RECHAZADA",
+                                   "resultado":  {
+                                                     "pagoId":  "PG-000002"
+                                                 }
+                               },
+                               {
+                                   "nombre":  "LiberarStock",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:43.545037Z"
+                               }
+                           ],
+                 "error":  "TARJETA_RECHAZADA"
+             },
+    "verificacion":  {
+                         "stockP001Antes":  8,
+                         "stockP001Despues":  8,
+                         "pagosDelPedido":  [
+                                                {
+                                                    "pagoId":  "PG-000002",
+                                                    "pedidoId":  "9aa449f5-fc1c-49bb-a0b7-7be0c4f1415d",
+                                                    "monto":  90000.00,
+                                                    "estado":  "Rechazado",
+                                                    "motivo":  "TARJETA_RECHAZADA",
+                                                    "tarjetaUltimos4":  "0000",
+                                                    "codigoAutorizacion":  null,
+                                                    "fechaUtc":  "2026-11-18T13:48:43.50186Z",
+                                                    "fechaReembolso":  null
+                                                }
+                                            ]
+                     },
+    "colas":  {
+                  "inventario.comandos":  {
+                                              "ready":  0,
+                                              "unacked":  0
+                                          },
+                  "logistica.comandos":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         },
+                  "pagos.comandos":  {
+                                         "ready":  0,
+                                         "unacked":  0
+                                     },
+                  "pedidos.respuestas":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         }
+              }
+}

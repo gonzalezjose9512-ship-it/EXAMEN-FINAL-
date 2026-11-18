@@ -1,0 +1,182 @@
+{
+    "escenario":  "E4 - Falla Logistica (sin cupo para la fecha)",
+    "requests":  {
+                     "item":  {
+                                  "productoId":  "P001",
+                                  "cantidad":  2,
+                                  "precioUnitario":  45000
+                              },
+                     "tarjeta":  {
+                                     "numero":  "4111111111111111",
+                                     "titular":  "Juan Perez",
+                                     "vencimiento":  "12/28"
+                                 },
+                     "fechaEnvioPreferida":  "2026-11-25",
+                     "cupoDiario":  0
+                 },
+    "pedidoId":  "7e8f7852-0ca1-419d-badc-5aa74c621a3d",
+    "sagaId":  "10b5f69a-a612-48e6-937d-fc512c39d3e2",
+    "pedido":  {
+                   "pedidoId":  "7e8f7852-0ca1-419d-badc-5aa74c621a3d",
+                   "clienteId":  "CLI-001",
+                   "estado":  "Rechazado",
+                   "direccionEnvio":  {
+                                          "calle":  "Av. Mate de Luna",
+                                          "numero":  "1234",
+                                          "ciudad":  "San Miguel de Tucumán",
+                                          "codigoPostal":  "4000"
+                                      },
+                   "items":  [
+                                 {
+                                     "productoId":  "P001",
+                                     "cantidad":  2,
+                                     "precioUnitario":  45000,
+                                     "subtotal":  90000
+                                 }
+                             ],
+                   "subtotal":  90000,
+                   "descuento":  0,
+                   "total":  90000,
+                   "version":  4,
+                   "confirmacion":  null,
+                   "motivoRechazo":  "SIN_CUPO"
+               },
+    "eventos":  [
+                    {
+                        "version":  1,
+                        "tipo":  "PedidoCreado",
+                        "fechaUtc":  "2026-11-18T13:48:50.58018Z",
+                        "datos":  {
+                                      "clienteId":  "CLI-001",
+                                      "direccionEnvio":  {
+                                                             "calle":  "Av. Mate de Luna",
+                                                             "ciudad":  "San Miguel de Tucumán",
+                                                             "numero":  "1234",
+                                                             "codigoPostal":  "4000"
+                                                         }
+                                  }
+                    },
+                    {
+                        "version":  2,
+                        "tipo":  "ItemAgregado",
+                        "fechaUtc":  "2026-11-18T13:48:50.640486Z",
+                        "datos":  {
+                                      "cantidad":  2,
+                                      "productoId":  "P001",
+                                      "precioUnitario":  45000
+                                  }
+                    },
+                    {
+                        "version":  3,
+                        "tipo":  "ConfirmacionSolicitada",
+                        "fechaUtc":  "2026-11-18T13:48:50.70143Z",
+                        "datos":  {
+                                      "sagaId":  "10b5f69a-a612-48e6-937d-fc512c39d3e2"
+                                  }
+                    },
+                    {
+                        "version":  4,
+                        "tipo":  "PedidoRechazado",
+                        "fechaUtc":  "2026-11-18T13:48:50.890913Z",
+                        "datos":  {
+                                      "motivo":  "SIN_CUPO"
+                                  }
+                    }
+                ],
+    "saga":  {
+                 "sagaId":  "10b5f69a-a612-48e6-937d-fc512c39d3e2",
+                 "pedidoId":  "7e8f7852-0ca1-419d-badc-5aa74c621a3d",
+                 "estado":  "Compensada",
+                 "pasos":  [
+                               {
+                                   "nombre":  "ReservarStock",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:50.736511Z",
+                                   "resultado":  {
+                                                     "reservaId":  "R-000003"
+                                                 }
+                               },
+                               {
+                                   "nombre":  "Cobrar",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:50.76185Z",
+                                   "resultado":  {
+                                                     "pagoId":  "PG-000003"
+                                                 }
+                               },
+                               {
+                                   "nombre":  "ProgramarEnvio",
+                                   "estado":  "Fallido",
+                                   "fechaUtc":  "2026-11-18T13:48:50.850264Z",
+                                   "motivo":  "SIN_CUPO"
+                               },
+                               {
+                                   "nombre":  "Reembolsar",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:50.878246Z"
+                               },
+                               {
+                                   "nombre":  "LiberarStock",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:50.888698Z"
+                               }
+                           ],
+                 "error":  "SIN_CUPO"
+             },
+    "verificacion":  {
+                         "stockP001Antes":  8,
+                         "stockP001Despues":  8,
+                         "pagosDelPedido":  [
+                                                {
+                                                    "pagoId":  "PG-000003",
+                                                    "pedidoId":  "7e8f7852-0ca1-419d-badc-5aa74c621a3d",
+                                                    "monto":  90000.00,
+                                                    "estado":  "Reembolsado",
+                                                    "motivo":  null,
+                                                    "tarjetaUltimos4":  "1111",
+                                                    "codigoAutorizacion":  "BDSFPY",
+                                                    "fechaUtc":  "2026-11-18T13:48:50.749457Z",
+                                                    "fechaReembolso":  "2026-11-18T13:48:50.864474Z"
+                                                }
+                                            ],
+                         "enviosDelDia":  {
+                                              "fecha":  "2026-11-25",
+                                              "cupoDiario":  0,
+                                              "programados":  1,
+                                              "envios":  [
+                                                             {
+                                                                 "envioId":  "E-000001",
+                                                                 "pedidoId":  "e63b3292-48a6-4d34-8515-92c7092c4fea",
+                                                                 "estado":  "Programado",
+                                                                 "codigoSeguimiento":  "TN-000001",
+                                                                 "fechaDespacho":  "2026-11-25",
+                                                                 "fechaEstimadaEntrega":  "2026-11-30",
+                                                                 "direccion":  {
+                                                                                   "calle":  "Av. Mate de Luna",
+                                                                                   "numero":  "1234",
+                                                                                   "ciudad":  "San Miguel de Tucumán",
+                                                                                   "codigoPostal":  "4000"
+                                                                               }
+                                                             }
+                                                         ]
+                                          }
+                     },
+    "colas":  {
+                  "inventario.comandos":  {
+                                              "ready":  0,
+                                              "unacked":  0
+                                          },
+                  "logistica.comandos":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         },
+                  "pagos.comandos":  {
+                                         "ready":  0,
+                                         "unacked":  0
+                                     },
+                  "pedidos.respuestas":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         }
+              }
+}

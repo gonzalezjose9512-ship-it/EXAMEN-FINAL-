@@ -1,0 +1,142 @@
+{
+    "escenario":  "E1 - Todo funciona",
+    "requests":  {
+                     "item":  {
+                                  "productoId":  "P001",
+                                  "cantidad":  2,
+                                  "precioUnitario":  45000
+                              },
+                     "tarjeta":  {
+                                     "numero":  "4111111111111111",
+                                     "titular":  "Juan Perez",
+                                     "vencimiento":  "12/28"
+                                 },
+                     "fechaEnvioPreferida":  "2026-11-25"
+                 },
+    "pedidoId":  "e63b3292-48a6-4d34-8515-92c7092c4fea",
+    "sagaId":  "cec76a10-7145-45c1-8c98-ade58ba7b98a",
+    "pedido":  {
+                   "pedidoId":  "e63b3292-48a6-4d34-8515-92c7092c4fea",
+                   "clienteId":  "CLI-001",
+                   "estado":  "Confirmado",
+                   "direccionEnvio":  {
+                                          "calle":  "Av. Mate de Luna",
+                                          "numero":  "1234",
+                                          "ciudad":  "San Miguel de Tucumán",
+                                          "codigoPostal":  "4000"
+                                      },
+                   "items":  [
+                                 {
+                                     "productoId":  "P001",
+                                     "cantidad":  2,
+                                     "precioUnitario":  45000,
+                                     "subtotal":  90000
+                                 }
+                             ],
+                   "subtotal":  90000,
+                   "descuento":  0,
+                   "total":  90000,
+                   "version":  4,
+                   "confirmacion":  {
+                                        "codigoAutorizacion":  "GR9DCF",
+                                        "codigoSeguimiento":  "TN-000001",
+                                        "fechaEstimadaEntrega":  "2026-11-30"
+                                    },
+                   "motivoRechazo":  null
+               },
+    "eventos":  [
+                    {
+                        "version":  1,
+                        "tipo":  "PedidoCreado",
+                        "fechaUtc":  "2026-11-18T13:48:41.542101Z",
+                        "datos":  {
+                                      "clienteId":  "CLI-001",
+                                      "direccionEnvio":  {
+                                                             "calle":  "Av. Mate de Luna",
+                                                             "ciudad":  "San Miguel de Tucumán",
+                                                             "numero":  "1234",
+                                                             "codigoPostal":  "4000"
+                                                         }
+                                  }
+                    },
+                    {
+                        "version":  2,
+                        "tipo":  "ItemAgregado",
+                        "fechaUtc":  "2026-11-18T13:48:41.791715Z",
+                        "datos":  {
+                                      "cantidad":  2,
+                                      "productoId":  "P001",
+                                      "precioUnitario":  45000
+                                  }
+                    },
+                    {
+                        "version":  3,
+                        "tipo":  "ConfirmacionSolicitada",
+                        "fechaUtc":  "2026-11-18T13:48:41.8367Z",
+                        "datos":  {
+                                      "sagaId":  "cec76a10-7145-45c1-8c98-ade58ba7b98a"
+                                  }
+                    },
+                    {
+                        "version":  4,
+                        "tipo":  "PedidoConfirmado",
+                        "fechaUtc":  "2026-11-18T13:48:42.175324Z",
+                        "datos":  {
+                                      "codigoSeguimiento":  "TN-000001",
+                                      "codigoAutorizacion":  "GR9DCF",
+                                      "fechaEstimadaEntrega":  "2026-11-30"
+                                  }
+                    }
+                ],
+    "saga":  {
+                 "sagaId":  "cec76a10-7145-45c1-8c98-ade58ba7b98a",
+                 "pedidoId":  "e63b3292-48a6-4d34-8515-92c7092c4fea",
+                 "estado":  "Completada",
+                 "pasos":  [
+                               {
+                                   "nombre":  "ReservarStock",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:42.00638Z",
+                                   "resultado":  {
+                                                     "reservaId":  "R-000001"
+                                                 }
+                               },
+                               {
+                                   "nombre":  "Cobrar",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:42.096859Z",
+                                   "resultado":  {
+                                                     "pagoId":  "PG-000001"
+                                                 }
+                               },
+                               {
+                                   "nombre":  "ProgramarEnvio",
+                                   "estado":  "Completado",
+                                   "fechaUtc":  "2026-11-18T13:48:42.172673Z",
+                                   "resultado":  {
+                                                     "envioId":  "E-000001",
+                                                     "codigoSeguimiento":  "TN-000001"
+                                                 }
+                               }
+                           ],
+                 "error":  null
+             },
+    "colas":  {
+                  "inventario.comandos":  {
+                                              "ready":  0,
+                                              "unacked":  0
+                                          },
+                  "logistica.comandos":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         },
+                  "pagos.comandos":  {
+                                         "ready":  0,
+                                         "unacked":  0
+                                     },
+                  "pedidos.respuestas":  {
+                                             "ready":  0,
+                                             "unacked":  0
+                                         }
+              }
+}
